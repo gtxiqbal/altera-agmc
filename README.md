@@ -1,1 +1,1 @@
-# altera-agmc
+# Golang Mini Course
