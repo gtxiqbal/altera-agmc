@@ -1,0 +1,211 @@
+{
+	"info": {
+		"_postman_id": "1503be32-e70c-4987-9dc4-5aa13f26130e",
+		"name": "binance",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "182981"
+	},
+	"item": [
+		{
+			"name": "{{base_url}}/api/v3/klines?symbol=BTCUSDT&interval=1m&limit=1000",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/api/v3/klines?symbol=BTCUSDT&interval=1m&limit=1000",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"v3",
+						"klines"
+					],
+					"query": [
+						{
+							"key": "symbol",
+							"value": "BTCUSDT"
+						},
+						{
+							"key": "interval",
+							"value": "1m"
+						},
+						{
+							"key": "limit",
+							"value": "1000"
+						}
+					]
+				},
+				"description": "Get recent 1000 BTCUSDT klines data with 1 minute interval"
+			},
+			"response": []
+		},
+		{
+			"name": "{{base_url}}/api/v3/klines?symbol=BTCUSDT&interval=1d&startTime=1661965200&endTime=1662526800",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/api/v3/klines?symbol=BTCUSDT&interval=1d&startTime=1662045514000&endTime=1662563914000",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"v3",
+						"klines"
+					],
+					"query": [
+						{
+							"key": "symbol",
+							"value": "BTCUSDT"
+						},
+						{
+							"key": "interval",
+							"value": "1d"
+						},
+						{
+							"key": "startTime",
+							"value": "1662045514000"
+						},
+						{
+							"key": "endTime",
+							"value": "1662563914000"
+						}
+					]
+				},
+				"description": "Get BTCUSDT klines data with 1 day interval, start from 1 September 2022 to 7 September 2022 (UTC)"
+			},
+			"response": []
+		},
+		{
+			"name": "{{base_url}}/api/v3/account?timestamp={{timestamp}}&signature={{signature}}",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"const ts  = Date.now();\r",
+							"pm.environment.set(\"timestamp\", ts);\r",
+							" \r",
+							"let paramsObject = {};\r",
+							" \r",
+							"const binance_api_secret = pm.environment.get(\"api_secret\");\r",
+							" \r",
+							"const parameters = pm.request.url.query;\r",
+							" \r",
+							"parameters.map((param) => {\r",
+							"    if (param.key != 'signature' && \r",
+							"        param.key != 'timestamp' && \r",
+							"        !is_empty(param.value) &&\r",
+							"        !is_disabled(param.disabled)) {\r",
+							"            paramsObject[param.key] = param.value;\r",
+							"            //console.log(encodeURIComponent(param.value));\r",
+							"            //pm.environment.set(param.key, encodeURIComponent(param.value));\r",
+							"    }\r",
+							"})\r",
+							"        \r",
+							"Object.assign(paramsObject, {'timestamp': ts});\r",
+							" \r",
+							"if (binance_api_secret) {\r",
+							"    const queryString = Object.keys(paramsObject).map((key) => {\r",
+							"        return `${key}=${paramsObject[key]}`;\r",
+							"    }).join('&');\r",
+							"    console.log(queryString);\r",
+							"    const signature = CryptoJS.HmacSHA256(queryString, binance_api_secret).toString();\r",
+							"    pm.environment.set(\"signature\", signature);\r",
+							"}\r",
+							" \r",
+							" \r",
+							"function is_disabled(str) {\r",
+							"    return str == true;\r",
+							"}\r",
+							" \r",
+							"function is_empty(str) {\r",
+							"    if (typeof str == 'undefined' ||\r",
+							"        !str || \r",
+							"        str.length === 0 || \r",
+							"        str === \"\" ||\r",
+							"        !/[^\\s]/.test(str) ||\r",
+							"        /^\\s*$/.test(str) ||\r",
+							"        str.replace(/\\s/g,\"\") === \"\")\r",
+							"    {\r",
+							"        return true;\r",
+							"    }\r",
+							"    else\r",
+							"    {\r",
+							"        return false;\r",
+							"    }\r",
+							"}"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "apikey",
+					"apikey": [
+						{
+							"key": "value",
+							"value": "{{api_key}}",
+							"type": "string"
+						},
+						{
+							"key": "key",
+							"value": "X-MBX-APIKEY",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/api/v3/account?timestamp={{timestamp}}&signature={{signature}}",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"v3",
+						"account"
+					],
+					"query": [
+						{
+							"key": "timestamp",
+							"value": "{{timestamp}}"
+						},
+						{
+							"key": "signature",
+							"value": "{{signature}}"
+						}
+					]
+				},
+				"description": "Get information of your account"
+			},
+			"response": []
+		}
+	]
+}
